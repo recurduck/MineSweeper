@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>MineSweeper</title>
+        <link rel="stylesheet" href="css/app.css">
+    </head>
+    <body lenguage='en' onload="initGame()"> 
+        <h1>MineSweeper</h1>
+        <div class="container">
+            <div class="level">
+                <input type="radio" id="1" name="level" value="0" onclick="initGame(this)" checked><label>Beginner</label>
+                <input type="radio" id="2" name="level" value="1" onclick="initGame(this)"><label>Medium</label>
+                <input type="radio" id="3" name="level" value="2" onclick="initGame(this)"><label>Expert</label>
+            </div>
+            <div class="timer">Game Time: <span></span></div>
+            <div class="next">Next Number: <span></span></div>
+            <div class="lives"></div>
+            <button class="status" onclick="initGame()"></button>
+            <div class="board-container"></div>    
+        </div>
+
+        <script src="js/util.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
