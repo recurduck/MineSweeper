@@ -15,13 +15,13 @@
                 <input type="radio" id="2" name="level" value="1" onclick="initGame(this)"><label>Medium</label>
                 <input type="radio" id="3" name="level" value="2" onclick="initGame(this)"><label>Expert</label>
             </div>
-            <div class="timer">Game Time: <span></span></div>
+            <div class="timer">Game Time: <div class="time"></div></div>
             <div class="next">Next Number: <span></span></div>
             <div class="lives"></div>
             <div class="hints"></div>
-            <div class="time"></div>
+            
             <div class="flags"></div>
-            <button class="safe" onclick="safeClick()">Safe-button</button>
+            <button class="safe" onclick="showSafeClick(this)"></button>
             <button class="status" onclick="initGame()"></button>
             <div class="board-container"></div>    
         </div>
