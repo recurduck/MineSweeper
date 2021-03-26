@@ -4,6 +4,7 @@
     <head>
         <meta charset="utf-8">
         <title>MineSweeper</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="css/app.css">
     </head>
     <body lenguage='en' onload="initGame()"> 
@@ -17,6 +18,10 @@
             <div class="timer">Game Time: <span></span></div>
             <div class="next">Next Number: <span></span></div>
             <div class="lives"></div>
+            <div class="hints"></div>
+            <div class="time"></div>
+            <div class="flags"></div>
+            <button class="safe" onclick="safeClick()">Safe-button</button>
             <button class="status" onclick="initGame()"></button>
             <div class="board-container"></div>    
         </div>

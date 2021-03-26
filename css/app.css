@@ -1,11 +1,38 @@
 body {
-    background-color: black;
-    color:white;
+    background-color: #686055; 
+    background-image: url("../img/background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color:darkcyan;
 }
 
 h1 { 
     text-align: center;
 }
+
+h1, .container {
+    margin: auto;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba(0, 100, 0, 0.185);
+    border-radius: 10px;
+    width:fit-content;
+}
+
+.hint, .status, .safe {
+    background-color: darkolivegreen;
+    font-size: x-large;
+    border-radius: 10px;
+}
+table,.cell {
+    background-color: rgba(2, 71, 2, 0.678);;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    outline: auto;
+}
+
+
 
 .cell {
     width: 40px;
