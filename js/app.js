@@ -11,6 +11,7 @@ const WIN = '😎';
 const HINT = '❔';
 const HINT_ON = '❓';
 const BUTTON = '<button class="field"> </button>';
+const FLAGED_BUTTON =  `<button class="field">${FLAG}</button>`;
 
 var gLevels = [
     { SIZE: 4, MINES: 2, LIVES: 1, HINTS: 1, SAFECLICK: 1 },
@@ -27,7 +28,8 @@ var gGame = {
     lives: 0,
     hints: 0,
     safes: 0,
-    hintIsOn: false
+    hintIsOn: false,
+    history: [] // [{board, shownCount, markedCount, lives, hints,safes}, ...]
 }
 
 //var gHistoryActions = {${step}: {board,lives,hints}
@@ -39,13 +41,10 @@ var gGame = {
 4. Manually positioned mines
 5.Best Score Keep the best score in local storage (per level) and show it on the page
 Create a “manually create” mode in which user first positions the mines (by clicking cells) and then plays.
-6. Undo Add an “UNDO” button, each click on that button takes the game back by one step (can go all the way back to game start).
-
 */
 
 // Modal
 var gBoardMatrix; //[{ minesAroundCount: 4, isShown: true,isMine: false, isMarked: true}];
-var gBoardHistory; // [{board, }]
 var elStatus = document.querySelector('.status')
 
 // This is called when page loads
@@ -130,7 +129,7 @@ function renderBoard(board, selector) {
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>';
         for (var j = 0; j < board[0].length; j++) {
-            var cell = (!board[i][j].isShown) ? BUTTON : (board[i][j].isMine) ? MINE : board[i][j].minesAroundCount;
+            var cell = (board[i][j].isMarked) ? FLAGED_BUTTON : (!board[i][j].isShown) ? BUTTON : (board[i][j].isMine) ? MINE : (board[i][j].minesAroundCount === 0) ? EMPTY : board[i][j].minesAroundCount;
             var className = 'cell cell' + i + '-' + j;
             var dataId = `data-i="${i}" data-j="${j}"`;
             strHTML += `<td ${dataId} class="${className}" onClick="cellClicked(this)" oncontextmenu="cellMarked(this)"> ${cell} </td>`
@@ -163,7 +162,7 @@ function renderHints() {
 
 function renderSafeButton() {
     document.querySelector('.safe').innerText = `Safe-button x ${gGame.safes}`
-    document.querySelector('.safe').style.backgroundColor = "grey"
+    document.querySelector('.safe').style.backgroundColor = "darkolivegreen"
 }
 
 function hintOn(elHint) {
@@ -213,12 +212,14 @@ function cellClicked(elCell) {
         j: parseInt(elCell.dataset.j)
     }
     var modalCell = gBoardMatrix[cell.i][cell.j]
-    if (!modalCell.isShown) {
+    if (!modalCell.isShown && !modalCell.isMarked) {
         // Click as Hint
         if (gGame.hintIsOn) {
             hintAroundCell(elCell)
             return;
         }
+        // Add Game Step
+        gGame.history.push(addGameStep());
         // Clicked on Mine
         if (modalCell.isMine) {
             if (gGame.shownCount > 0) {
@@ -248,6 +249,7 @@ function cellMarked(elCell) {
         i: elCell.dataset.i,
         j: elCell.dataset.j
     }
+    gGame.history.push(addGameStep());
     var modalCell = gBoardMatrix[cell.i][cell.j]
     if (!modalCell.isShown) {
         if (modalCell.isMarked) {
@@ -341,6 +343,20 @@ function renderNeighbors(cellI, cellJ, board, expand = true, hide = false) {
     }
 }
 
+function undoStep() {
+    if(gGame.history.length > 0 && gGame.isOn) {
+        var backStep = gGame.history.pop();
+        gBoardMatrix = backStep.board;
+        gGame.shownCount = backStep.shownCount;
+        gGame.markedCount = backStep.markedCount;
+        gGame.lives = backStep.lives;
+        gGame.hints = backStep.hints;
+        renderBoard(gBoardMatrix, '.board-container');
+        if (gGame.history.length === 0)
+            initGame();
+    }    
+}
+
 
 // resetting Game values
 function resetGameValues(level = 0) {
@@ -352,5 +368,6 @@ function resetGameValues(level = 0) {
     gGame.hints = gLevels[level].HINTS;
     gGame.safes = gLevels[level].SAFECLICK;
     gGame.hintIsOn = false
+    gGame.history = [];
     resetTimer()
 }
