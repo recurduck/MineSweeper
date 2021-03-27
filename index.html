@@ -11,19 +11,21 @@
         <h1>MineSweeper</h1>
         <div class="container">
             <div class="level">
-                <input type="radio" id="1" name="level" value="0" onclick="initGame(this)" checked><label>Beginner</label>
-                <input type="radio" id="2" name="level" value="1" onclick="initGame(this)"><label>Medium</label>
-                <input type="radio" id="3" name="level" value="2" onclick="initGame(this)"><label>Expert</label>
-                <input type="radio" id="4" name="level" value="3" onclick="initGame(this)"><label>Costom(TODO)</label>
+                <input type="radio" id="Beginner" name="level" value="0" onclick="initGame(this)" checked><label>Beginner</label></input>
+                <input type="radio" id="Medium" name="level" value="1" onclick="initGame(this)"><label>Medium</label>
+                <input type="radio" id="Expert" name="level" value="2" onclick="initGame(this)"><label>Expert</label>
+                <input type="radio" id="Costom" name="level" value="3" onclick="openCostomMenu()"><label>Costom(TODO)</label>
             </div>
+            <div class="best-score"></div>
             <div>
                 <div class="timer">Game Time: <span class="time"></span></div>
                 <div class="lives"></div>
-                <button class="undo" onclick="undoStep()">⏮UNDO</button>
+                <div class="hints"></div>
             </div>
             <div>
-                <div class="hints"></div>
+                <button class="undo" onclick="undoStep()">⏮UNDO</button>
                 <button class="safe" onclick="showSafeClick(this)"></button>
+                <button class="set-mines" onclick="setMineOn()">Set Mines Manual</button>
                 <div class="flags"></div>
             </div>
             <button class="status" onclick="initGame()"></button>
@@ -33,5 +35,6 @@
 
         <script src="js/util.js"></script>
         <script src="js/app.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
     </body>
 </html>
