@@ -11,16 +11,17 @@ const WIN = '😎';
 const HINT = '❔';
 const HINT_ON = '❓';
 const BUTTON = '<button class="field"> </button>';
-const FLAGED_BUTTON =  `<button class="field">${FLAG}</button>`;
+const FLAGED_BUTTON = `<button class="field">${FLAG}</button>`;
 
 var gLevels = [
     { SIZE: 4, MINES: 2, LIVES: 1, HINTS: 1, SAFECLICK: 1 },
     { SIZE: 8, MINES: 12, LIVES: 2, HINTS: 2, SAFECLICK: 2 },
     { SIZE: 12, MINES: 30, LIVES: 3, HINTS: 3, SAFECLICK: 3 },
-    { SIZE: 0, MINES: 0, LIVES: 3, HINTS: 3, SAFECLICK: 3}  // Editable! for costom board
+    { SIZE: 0, MINES: 0, LIVES: 3, HINTS: 3, SAFECLICK: 3 }  // Editable! for costom board
 ];
 
 var gGame = {
+    setMineOn: false,
     isOn: false,
     shownCount: 0,
     markedCount: 0,
@@ -32,26 +33,41 @@ var gGame = {
     history: [] // [{board, shownCount, markedCount, lives, hints,safes}, ...]
 }
 
-//var gHistoryActions = {${step}: {board,lives,hints}
-
 // todo:
 /*
 1. UI
 3. flags remaining
-4. Manually positioned mines
-5.Best Score Keep the best score in local storage (per level) and show it on the page
-Create a “manually create” mode in which user first positions the mines (by clicking cells) and then plays.
+
 */
 
 // Modal
 var gBoardMatrix; //[{ minesAroundCount: 4, isShown: true,isMine: false, isMarked: true}];
+var gBestScore;
 var elStatus = document.querySelector('.status')
+
+// Load from local storage
+
+function renderBestScore(level = 0, reached = false) {
+    gBestScore = localStorage.getItem(`bestScore${level.id}`);
+    var elBestScore = document.querySelector('.best-score');
+    var strHTML = `Best Score for ${level.id}: `
+    strHTML += (!gBestScore) ? '-' : `${gBestScore} sec`;
+    elBestScore.innerText = strHTML;
+    if (reached) {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+}
 
 // This is called when page loads
 function initGame(el = undefined) {
     el = (!el) ? document.querySelector('.level > input:checked') : el;
     resetGameValues(el.value);
     gBoardMatrix = buildBoard(el.value);
+    renderBestScore(el);
     renderLives();
     renderHints();
     renderSafeButton();
@@ -59,6 +75,17 @@ function initGame(el = undefined) {
     renderBoard(gBoardMatrix, '.board-container');
     console.log(gBoardMatrix);
 }
+
+
+function clearMinesOnBoard() {
+    for (var i = 0; i < gBoardMatrix.length; i++) {
+        for (var j = 0; j < gBoardMatrix[0].length; j++) {
+            gBoardMatrix[i][j].isMine = false
+        }
+    }
+    setMinesNegsCount(gBoardMatrix)
+}
+
 
 // Builds the board Set mines at random locations Call setMinesNegsCount() 
 // Return the created board setMinesNegsCount(board)
@@ -85,7 +112,7 @@ function showSafeClick(elSafeButton) {
             blinkField(i, j);
             gGame.safes--;
             if (gGame.safes > 0)
-                elSafeButton.innerText = `Safe-Button x ${gGame.safes}`;
+            elSafeButton.innerText = `Safe-Button x ${gGame.safes}`;
             else {
                 elSafeButton.innerText = "Safe-Button";
                 elSafeButton.style.backgroundColor = "red"
@@ -148,7 +175,7 @@ function renderLives() {
         strHTML += LIVE;
     }
     elLives.innerText = 'LIVES:' + strHTML;
-
+    
 }
 
 function renderHints() {
@@ -166,7 +193,7 @@ function renderSafeButton() {
 }
 
 function hintOn(elHint) {
-    if (elHint.innerText === HINT && !gGame.hintIsOn) {
+    if (elHint.innerText === HINT && !gGame.hintIsOn && gGame.isOn) {
         elHint.innerText = HINT_ON;
         gGame.hintIsOn = true;
     } else if (elHint.innerText === HINT_ON && gGame.hintIsOn) {
@@ -216,6 +243,12 @@ function cellClicked(elCell) {
         // Click as Hint
         if (gGame.hintIsOn) {
             hintAroundCell(elCell)
+            return;
+        }
+        // Click as Set Mine
+        if (gGame.setMineOn) {
+            modalCell.isMine = true
+            setMinesNegsCount(gBoardMatrix);
             return;
         }
         // Add Game Step
@@ -284,13 +317,19 @@ function checkGameOver(isOver = false) {
         for (var i = 0; i < gBoardMatrix.length; i++) {
             for (var j = 0; j < gBoardMatrix[i].length; j++) {
                 if (!gBoardMatrix[i][j].isShown && !gBoardMatrix[i][j].isMine)
-                    return false;
+                return false;
             }
         }
         elStatus.innerText = WIN;
+        var level = document.querySelector('.level > input:checked');
+        // Update Best Score if Win and its a best score
         stopTimer();
         renderFlags();
         gGame.isOn = false;
+        if (gGame.secsPassed < localStorage.getItem(`bestScore${level.id}`) || !localStorage.getItem(`bestScore${level.id}`)) {
+            localStorage.setItem(`bestScore${level.id}`, gGame.secsPassed);
+            renderBestScore(level, true)
+        }
     }
     return true;
 }
@@ -329,14 +368,14 @@ function renderNeighbors(cellI, cellJ, board, expand = true, hide = false) {
         if (i < 0 || i >= board.length) continue;
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
             if (i === cellI && j === cellJ)
-                continue;
+            continue;
             if (j < 0 || j >= board[i].length)
-                continue;
+            continue;
             if (board[i][j].minesAroundCount >= 0 && !board[i][j].isShown && expand) {
                 expandShown(board, i, j)
             } else if (!expand) {
-                var value = (hide) ? (board[i][j].isShown) ? (board[i][j].isMine) ? MINE : board[i][j].minesAroundCount : BUTTON  :(board[i][j].isMine) ? MINE :
-                        (board[i][j].minesAroundCount > 0) ? board[i][j].minesAroundCount : EMPTY;
+                var value = (hide) ? (board[i][j].isShown) ? (board[i][j].isMine) ? MINE : board[i][j].minesAroundCount : BUTTON : (board[i][j].isMine) ? MINE :
+                (board[i][j].minesAroundCount > 0) ? board[i][j].minesAroundCount : EMPTY;
                 renderCell({ i, j }, value);
             }
         }
@@ -344,7 +383,7 @@ function renderNeighbors(cellI, cellJ, board, expand = true, hide = false) {
 }
 
 function undoStep() {
-    if(gGame.history.length > 0 && gGame.isOn) {
+    if (gGame.history.length > 0 && gGame.isOn) {
         var backStep = gGame.history.pop();
         gBoardMatrix = backStep.board;
         gGame.shownCount = backStep.shownCount;
@@ -353,8 +392,8 @@ function undoStep() {
         gGame.hints = backStep.hints;
         renderBoard(gBoardMatrix, '.board-container');
         if (gGame.history.length === 0)
-            initGame();
-    }    
+        initGame();
+    }
 }
 
 
@@ -370,4 +409,18 @@ function resetGameValues(level = 0) {
     gGame.hintIsOn = false
     gGame.history = [];
     resetTimer()
+}
+
+function setMineOn() {
+    var button = document.querySelector('.set-mines');
+    if (!gGame.setMineOn && !gGame.isOn && gGame.shownCount === 0) {
+        button.style.backgroundColor = ('lightgreen');
+        gGame.setMineOn = true;
+        clearMinesOnBoard()
+        
+    }
+    else if (gGame.setMineOn && !gGame.isOn) {
+        button.style.backgroundColor = ('darkolivegreen');
+        gGame.setMineOn = false;
+    }
 }

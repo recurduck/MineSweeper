@@ -21,7 +21,7 @@ h1, .container {
     width:fit-content;
 }
 
-.timer ,.lives, .hints, .safe, .credit{
+.timer ,.lives, .hints, .safe, .credit, .best-score{
     background-color: #556b2f87;
     color: black;
     margin: 9px 1px;
@@ -32,7 +32,7 @@ h1, .container {
     display: inline-block;
 }
 
-.hint, .status, .safe, .undo {
+.hint, .status, .safe, .undo, .set-mines {
     background-color: darkolivegreen;
     font-size: large;
     border-radius: 10px;
@@ -55,6 +55,7 @@ table,.cell {
 
 table {
     border: 10px solid rgba(2, 71, 2, 0.062);
+    table-layout:fixed;
 }
 
 
