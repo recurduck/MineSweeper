@@ -33,19 +33,20 @@ var gGame = {
     history: [] // [{board, shownCount, markedCount, lives, hints,safes}, ...]
 }
 
+// Dark mode variable
+var gDarkModeIsOn = false
 // todo:
 /*
-1. UI
-3. flags remaining
-
+1. UI make it simple
+2. add comments on code
+3. make the code better
+4. add the costom option!!!
 */
 
 // Modal
 var gBoardMatrix; //[{ minesAroundCount: 4, isShown: true,isMine: false, isMarked: true}];
 var gBestScore;
 var elStatus = document.querySelector('.status')
-
-// Load from local storage
 
 function renderBestScore(level = 0, reached = false) {
     gBestScore = localStorage.getItem(`bestScore${level.id}`);
@@ -103,19 +104,18 @@ function buildBoard(level = 0) {
 }
 
 function showSafeClick(elSafeButton) {
-    console.log('gGame.safes:', gGame.safes)
     if (gGame.isOn && gGame.safes > 0) {
-        console.log('gGame.safes:', gGame.safes)
         var i = getRandomInt(0, gBoardMatrix.length)
         var j = getRandomInt(0, gBoardMatrix[0].length)
         if (!gBoardMatrix[i][j].isMine && !gBoardMatrix[i][j].isShown) {
             blinkField(i, j);
             gGame.safes--;
             if (gGame.safes > 0)
-            elSafeButton.innerText = `Safe-Button x ${gGame.safes}`;
+                elSafeButton.innerText = `Safe-Button x ${gGame.safes}`;
             else {
                 elSafeButton.innerText = "Safe-Button";
-                elSafeButton.style.backgroundColor = "red"
+                elSafeButton.style.backgroundColor = "red";
+                elSafeButton.classList.add('disabled');
             }
         }
         else showSafeClick(elSafeButton);
@@ -168,6 +168,7 @@ function renderBoard(board, selector) {
     elContainer.innerHTML = strHTML;
 }
 
+// Render how many lives have the user
 function renderLives() {
     var elLives = document.querySelector('.lives');
     var strHTML = '';
@@ -175,21 +176,23 @@ function renderLives() {
         strHTML += LIVE;
     }
     elLives.innerText = 'LIVES:' + strHTML;
-    
+
 }
 
+// Render how many lives have the user
 function renderHints() {
     var elLives = document.querySelector('.hints');
     var strHTML = '';
     for (var i = 0; i < gGame.lives; i++) {
-        strHTML += `<button class="hint" onClick="hintOn(this)">${HINT}</button>`;
+        strHTML += `<button class="hint btn" onClick="hintOn(this)">${HINT}</button>`;
     }
     elLives.innerHTML = `HINTS: ${strHTML}`
 }
 
 function renderSafeButton() {
+    document.querySelector('.safe').classList.remove('disabled')
     document.querySelector('.safe').innerText = `Safe-button x ${gGame.safes}`
-    document.querySelector('.safe').style.backgroundColor = "darkolivegreen"
+    document.querySelector('.safe').style.backgroundColor = (gDarkModeIsOn) ? "#0000004d" : "darkolivegreen"
 }
 
 function hintOn(elHint) {
@@ -248,6 +251,7 @@ function cellClicked(elCell) {
         // Click as Set Mine
         if (gGame.setMineOn) {
             modalCell.isMine = true
+
             setMinesNegsCount(gBoardMatrix);
             return;
         }
@@ -271,6 +275,7 @@ function cellClicked(elCell) {
     }
     if (!gGame.isOn && gGame.shownCount >= 1 && gGame.lives > 0) {
         gGame.isOn = true;
+        document.querySelector('.set-mines').classList.add('disabled');
         startTimer();
     }
     checkGameOver();
@@ -317,7 +322,7 @@ function checkGameOver(isOver = false) {
         for (var i = 0; i < gBoardMatrix.length; i++) {
             for (var j = 0; j < gBoardMatrix[i].length; j++) {
                 if (!gBoardMatrix[i][j].isShown && !gBoardMatrix[i][j].isMine)
-                return false;
+                    return false;
             }
         }
         elStatus.innerText = WIN;
@@ -368,14 +373,14 @@ function renderNeighbors(cellI, cellJ, board, expand = true, hide = false) {
         if (i < 0 || i >= board.length) continue;
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
             if (i === cellI && j === cellJ)
-            continue;
+                continue;
             if (j < 0 || j >= board[i].length)
-            continue;
+                continue;
             if (board[i][j].minesAroundCount >= 0 && !board[i][j].isShown && expand) {
                 expandShown(board, i, j)
             } else if (!expand) {
                 var value = (hide) ? (board[i][j].isShown) ? (board[i][j].isMine) ? MINE : board[i][j].minesAroundCount : BUTTON : (board[i][j].isMine) ? MINE :
-                (board[i][j].minesAroundCount > 0) ? board[i][j].minesAroundCount : EMPTY;
+                    (board[i][j].minesAroundCount > 0) ? board[i][j].minesAroundCount : EMPTY;
                 renderCell({ i, j }, value);
             }
         }
@@ -392,7 +397,7 @@ function undoStep() {
         gGame.hints = backStep.hints;
         renderBoard(gBoardMatrix, '.board-container');
         if (gGame.history.length === 0)
-        initGame();
+            initGame();
     }
 }
 
@@ -408,6 +413,7 @@ function resetGameValues(level = 0) {
     gGame.safes = gLevels[level].SAFECLICK;
     gGame.hintIsOn = false
     gGame.history = [];
+    document.querySelector('.set-mines').classList.remove('disabled')
     resetTimer()
 }
 
@@ -417,10 +423,26 @@ function setMineOn() {
         button.style.backgroundColor = ('lightgreen');
         gGame.setMineOn = true;
         clearMinesOnBoard()
-        
+
     }
     else if (gGame.setMineOn && !gGame.isOn) {
-        button.style.backgroundColor = ('darkolivegreen');
+        button.style.backgroundColor = ((gDarkModeIsOn) ? '#0000004d' : 'darkolivegreen');
         gGame.setMineOn = false;
     }
+}
+
+function toggleDarkMode() {
+    gDarkModeIsOn = !gDarkModeIsOn;
+    var elBody = document.querySelector('body');
+    var elButtons = document.querySelectorAll('.btn');
+    var elDetails = document.querySelectorAll('.details')
+    var eltable = document.querySelector('table')
+    elBody.classList.toggle('dark-mode');
+    for (var i = 0; i < elButtons.length; i++)
+        elButtons[i].classList.toggle('btn-dark');
+    renderSafeButton();
+    for (var i = 0; i < elDetails.length; i++)
+        elDetails[i].classList.toggle('details-dark');
+    renderBestScore(document.querySelector('.level > input:checked'));
+    eltable.classList.toggle('table-dark');
 }

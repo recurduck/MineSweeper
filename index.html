@@ -11,26 +11,30 @@
         <h1>MineSweeper</h1>
         <div class="container">
             <div class="level">
-                <input type="radio" id="Beginner" name="level" value="0" onclick="initGame(this)" checked><label>Beginner</label></input>
-                <input type="radio" id="Medium" name="level" value="1" onclick="initGame(this)"><label>Medium</label>
-                <input type="radio" id="Expert" name="level" value="2" onclick="initGame(this)"><label>Expert</label>
-                <input type="radio" id="Costom" name="level" value="3" onclick="openCostomMenu()"><label>Costom(TODO)</label>
+                <input type="radio" id="Beginner" name="level" value="0" onclick="initGame(this)" checked><label class="radlevel">Beginner</label></input>
+                <input type="radio" id="Medium" name="level" value="1" onclick="initGame(this)"><label class="radlevel">Medium</label>
+                <input type="radio" id="Expert" name="level" value="2" onclick="initGame(this)"><label class="radlevel">Expert</label>
+                <input type="radio" id="Costom" name="level" value="3" onclick="openCostomMenu()"><label class="radlevel">Costom(TODO)</label>
             </div>
-            <div class="best-score"></div>
+            <div class="best-score details"></div>
+            <label class="switch">
+                <input type="checkbox" onclick="toggleDarkMode()">
+                <span class="slider round"></span>
+            </label>
             <div>
-                <div class="timer">Game Time: <span class="time"></span></div>
-                <div class="lives"></div>
-                <div class="hints"></div>
+                <div class="timer details">Game Time: <span class="time"></span></div>
+                <div class="lives details"></div>
+                <div class="hints details"></div>
             </div>
             <div>
-                <button class="undo" onclick="undoStep()">⏮UNDO</button>
-                <button class="safe" onclick="showSafeClick(this)"></button>
-                <button class="set-mines" onclick="setMineOn()">Set Mines Manual</button>
+                <button class="undo btn" onclick="undoStep()">⏮UNDO</button>
+                <button class="safe btn" onclick="showSafeClick(this)"></button>
+                <button class="set-mines btn" onclick="setMineOn()">Set Mines Manual</button>
                 <div class="flags"></div>
             </div>
-            <button class="status" onclick="initGame()"></button>
+            <button class="status btn" onclick="initGame()"></button>
             <div class="board-container"></div>  
-            <div class="credit">© Ilai G.</div>>  
+            <div class="credit">© Ilai G.</div> 
         </div>
 
         <script src="js/util.js"></script>
