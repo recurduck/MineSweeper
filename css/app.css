@@ -36,7 +36,7 @@ h1, .container {
     display: inline-block;
 }
 
-.hint, .status, .safe, .undo, .set-mines {
+.hint, .status, .safe, .undo, .set-mines, .customBtn {
     background-color: darkolivegreen;
     font-size: large;
     border-radius: 10px;
@@ -127,7 +127,7 @@ button:focus {
     display: inline-block;
     width: 54px;
     height: 28px;
-    left: 110px;
+    left: 30px;
 }
   
 /* Hide default HTML checkbox */
@@ -183,4 +183,9 @@ input:checked + .slider:before {
   
 .slider.round:before {
     border-radius: 50%;
+}
+
+/* input number */
+.customInput {
+    width: 3em;
 }

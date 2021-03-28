@@ -14,7 +14,16 @@
                 <input type="radio" id="Beginner" name="level" value="0" onclick="initGame(this)" checked><label class="radlevel">Beginner</label></input>
                 <input type="radio" id="Medium" name="level" value="1" onclick="initGame(this)"><label class="radlevel">Medium</label>
                 <input type="radio" id="Expert" name="level" value="2" onclick="initGame(this)"><label class="radlevel">Expert</label>
-                <input type="radio" id="Costom" name="level" value="3" onclick="openCostomMenu()"><label class="radlevel">Costom(TODO)</label>
+                <input type="radio" id="Custom" name="level" value="3" onclick="openCustomMenu()"><label class="radlevel">Custom</label>
+            </div>
+            <div class="custom" style="display: none;">
+                <label for="rowsNum">Rows: </label>
+                <input class="customInput" id="rowsNum" type="number" name="rowsNum" value="5" min="4" max="20" required>
+                <label for="colsNum">Cols: </label>
+                <input class="customInput" id="colsNum" type="number" name="rowsNum" value="5" min="4" max="20" required>
+                <label for="minesNum">Mines: </label>
+                <input class="customInput" id="minesNum" type="number" name="minesNum" value="3" min="1" max="{r}*{c}" required>
+                <button class="customBtn btn" onclick="createCustomBoard()">go!</button>
             </div>
             <div class="best-score details"></div>
             <label class="switch">
