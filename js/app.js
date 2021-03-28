@@ -43,6 +43,14 @@ var gDarkModeIsOn = false
 4. add the costom option!!!
 */
 
+function openCustomMenu() {
+    var elCustom = document.querySelector('.custom')
+    elCustom.style.display = 'block';
+}
+function closeCustomMenu() {
+    var elCustom = document.querySelector('.custom')
+    elCustom.style.display = 'none';
+}
 // Modal
 var gBoardMatrix; //[{ minesAroundCount: 4, isShown: true,isMine: false, isMarked: true}];
 var gBestScore;
@@ -64,10 +72,11 @@ function renderBestScore(level = 0, reached = false) {
 }
 
 // This is called when page loads
-function initGame(el = undefined) {
+function initGame(el = undefined, custom = false) {
     el = (!el) ? document.querySelector('.level > input:checked') : el;
+    if(el.value !== 3) closeCustomMenu();
     resetGameValues(el.value);
-    gBoardMatrix = buildBoard(el.value);
+    gBoardMatrix = (custom) ? buildBoard(el.value, custom) : buildBoard(el.value);
     renderBestScore(el);
     renderLives();
     renderHints();
@@ -75,6 +84,13 @@ function initGame(el = undefined) {
     elStatus.innerText = NORMAL;
     renderBoard(gBoardMatrix, '.board-container');
     console.log(gBoardMatrix);
+}
+
+function createCustomBoard() {
+    gLevels[3].SIZE = parseInt(document.querySelector('#rowsNum').value);
+    var elInputCols = parseInt(document.querySelector('#colsNum').value);
+    gLevels[3].MINES = parseInt(document.querySelector('#minesNum').value);
+    initGame(undefined, elInputCols)
 }
 
 
@@ -87,14 +103,13 @@ function clearMinesOnBoard() {
     setMinesNegsCount(gBoardMatrix)
 }
 
-
 // Builds the board Set mines at random locations Call setMinesNegsCount() 
 // Return the created board setMinesNegsCount(board)
-function buildBoard(level = 0) {
+function buildBoard(level = 0, optionalSize = gLevels[level].SIZE) {
     var board = [];
     for (var i = 0; i < gLevels[level].SIZE; i++) {
         board[i] = []
-        for (var j = 0; j < gLevels[level].SIZE; j++) {
+        for (var j = 0; j < optionalSize; j++) {
             board[i][j] = { minesAroundCount: 0, isShown: false, isMine: false, isMarked: false };
         }
     }
