@@ -5,25 +5,39 @@
         <meta charset="utf-8">
         <title>MineSweeper</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/app.css">
     </head>
-    <body lenguage='en' onload="initGame()"> 
+    <body onload="initGame()"> 
         <h1>MineSweeper</h1>
         <div class="container">
             <div class="level">
-                <input type="radio" id="Beginner" name="level" value="0" onclick="initGame(this)" checked><label class="radlevel">Beginner</label></input>
-                <input type="radio" id="Medium" name="level" value="1" onclick="initGame(this)"><label class="radlevel">Medium</label>
-                <input type="radio" id="Expert" name="level" value="2" onclick="initGame(this)"><label class="radlevel">Expert</label>
-                <input type="radio" id="Custom" name="level" value="3" onclick="openCustomMenu()"><label class="radlevel">Custom</label>
+                <label class="radio-label">
+                    <input type="radio" id="Beginner" name="level" value="0" onclick="initGame(this)" checked></input>
+                    Beginner
+                </label>
+                <label class="radio-label">
+                    <input type="radio" id="Medium" name="level" value="1" onclick="initGame(this)">
+                    Medium
+                </label>
+                <label class="radio-label">
+                    <input type="radio" id="Expert" name="level" value="2" onclick="initGame(this)">
+                    Expert
+                </label>
+                <label class="radio-label">
+                    <input type="radio" id="Custom" name="level" value="3" onclick="openCustomMenu()">
+                    Custom
+                </label>
             </div>
             <div class="custom" style="display: none;">
                 <label for="rowsNum">Rows: </label>
-                <input class="customInput" id="rowsNum" type="number" name="rowsNum" value="5" min="4" max="20" required>
+                <input id="rowsNum" type="number" name="rowsNum" value="5" min="4" max="20" required>
                 <label for="colsNum">Cols: </label>
-                <input class="customInput" id="colsNum" type="number" name="rowsNum" value="5" min="4" max="20" required>
+                <input id="colsNum" type="number" name="rowsNum" value="5" min="4" max="20" required>
                 <label for="minesNum">Mines: </label>
-                <input class="customInput" id="minesNum" type="number" name="minesNum" value="3" min="1" max="{r}*{c}" required>
-                <button class="customBtn btn" onclick="createCustomBoard()">go!</button>
+                <input id="minesNum" type="number" name="minesNum" value="3" min="1" required>
+                <button class="btn go-custom" onclick="createCustomBoard()">go!</button>
             </div>
             <div class="best-score details"></div>
             <label class="switch">
@@ -36,12 +50,12 @@
                 <div class="hints details"></div>
             </div>
             <div>
-                <button class="undo btn" onclick="undoStep()">⏮UNDO</button>
-                <button class="safe btn" onclick="showSafeClick(this)"></button>
-                <button class="set-mines btn" onclick="setMineOn()">Set Mines Manual</button>
+                <button class="btn undo" onclick="undoStep()">⏮UNDO</button>
+                <button class="btn safe" onclick="showSafeClick(this)"></button>
+                <button class="btn set-mines" onclick="toggleManualMine()">Set Mines Manual</button>
                 <div class="flags"></div>
             </div>
-            <button class="status btn" onclick="initGame()"></button>
+            <button class="btn status" onclick="initGame()"></button>
             <div class="board-container"></div>  
             <div class="credit">© Ilai G.</div> 
         </div>

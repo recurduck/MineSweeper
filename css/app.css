@@ -1,19 +1,20 @@
+*{
+    box-sizing: border-box;
+}
+
 body {
     background-color: #686055; 
     background-image: url("../img/background.jpg");
     background-size: cover;
     background-repeat: no-repeat;
-    color:rgb(0, 116, 116);
-    font-family: Helvetica, sans-serif;   
+    color:grey;
+    font-family: 'Fredoka One', cursive;
+    transition: background 1s;
+    text-align: center;
 }
 .dark-mode {
     background-color: black;
     background-image: url("../img/backgroundDark.jpg");
-    
-}
-
-h1 { 
-    text-align: center;
 }
 
 h1, .container {
@@ -25,47 +26,69 @@ h1, .container {
     width:fit-content;
 }
 
-.timer ,.lives, .hints, .safe, .credit, .best-score{
+/* Details */
+.details {
     background-color: #556b2f87;
     color: black;
     margin: 9px 1px;
     padding: 5px;
     width: fit-content;
     border-radius: 10px;
-    font-weight: 700;
+    font-weight: 600;
     display: inline-block;
-}
-
-.hint, .status, .safe, .undo, .set-mines, .customBtn {
-    background-color: darkolivegreen;
-    font-size: large;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.btn:hover {
-    background-color: #494625cc;
-}
-
-.btn-dark {
-    background-color: #5329294d;
-    color: darkslategray;
 }
 .details-dark {
     background-color: #0607044d;
     color: #556b2f;
 }
-.table-dark {
-    outline: none;
+
+
+/* Buttons */
+button:focus {
+    outline: 0px;
+}
+.btn {
+    height:30px;
+    margin: 2px;
+    background-color: darkolivegreen;
+    font-size: large;
+    font-family: 'Fredoka One', cursive;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-blocks;
+}
+.btn:hover {
+    background-color: #494625cc;
+}
+.btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.btn-dark {
+    background-color: #5329294d;
+    color: darkslategray;
+}
+.btn-field {
+    background-color: grey;
+    width:100%;
+    height: 100%;
+    transition: 0.2s;
+    cursor: help;
+}
+.btn-field:hover {
+    background-color: darkgray;
+}
+.btn-field:active {
+    background-color: #ff0000;
+    transform: translateY(1px);
 }
 
-.status ,.credit{
-    margin: auto;
-    width: fit-content;
-    border-radius: 45%;
-    display: block;
-}
 
+/* Table */
+table {
+    border: 10px solid rgba(2, 71, 2, 0.062);
+    table-layout:fixed;
+}
 table,.cell {
     background-color: rgba(2, 71, 2, 0.527);;
     margin: auto;
@@ -73,52 +96,32 @@ table,.cell {
     margin-bottom: 20px;
     outline: auto;
 }
-
-table {
-    border: 10px solid rgba(2, 71, 2, 0.062);
-    table-layout:fixed;
-}
-
-
-
-
 .cell {
     width: 40px;
     height: 40px;
     text-align: center;
     font-size: 1.5em;
 }
-
-button:focus {
-    outline: 0px;
+.table-dark {
+    outline: none;
 }
 
-.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.field {
-    background-color: grey;
-    width:100%;
-    height: 100%;
-    transition: 0.2s;
-    cursor: help;
-}
-.field:hover {
-    background-color: darkgray;
-}
-.field:active {
-    background-color: #ff0000;
-    transform: translateY(1px);
-}
-
-.radlevel {
+/* Radio Input */ 
+.radio-label {
     color: black;
-    font-weight: 700;
+    margin: 2px;
+    padding: 0px 5px;
+    font-weight: 600;
     background-color: rgba(221, 178, 122, 0.384);
     border-radius: 10px;
+}
 
+/* Extra specify elements */
+.status , .credit{
+    margin: auto;
+    width: fit-content;
+    border-radius: 45%;
+    display: block;
 }
 
 /* The switch - the box around the slider */
@@ -146,8 +149,11 @@ button:focus {
     right: 0;
     bottom: 0;
     background-color: rgba(221, 178, 122, 0.384);
-    -webkit-transition: .4s;
+    box-shadow: 0 0 3px #000000;
     transition: .4s;
+}
+.slider:hover {
+    box-shadow: 0 0 3px yellow;
 }
   
 .slider:before {
@@ -158,7 +164,6 @@ button:focus {
     left: 4px;
     bottom: 4px;
     background-color: #494625cc;
-    -webkit-transition: .4s;
     transition: .4s;
 }
   
@@ -171,8 +176,6 @@ input:focus + .slider {
 }
   
 input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
     transform: translateX(26px);
 }
   
@@ -186,6 +189,6 @@ input:checked + .slider:before {
 }
 
 /* input number */
-.customInput {
+.custom input {
     width: 3em;
 }

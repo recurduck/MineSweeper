@@ -6,14 +6,14 @@ var gMin = 0;
 var gSec = 0;
 var gStopTime = true;
 
-function countNeighbors(cellI, cellJ, mat) {
+function countNeighbors(cellI, cellJ, board) {
   var neighborsCount = 0;
   for (var i = cellI - 1; i <= cellI + 1; i++) {
-    if (i < 0 || i >= mat.length) continue;
+    if (i < 0 || i >= board.length) continue;
     for (var j = cellJ - 1; j <= cellJ + 1; j++) {
       if (i === cellI && j === cellJ) continue;
-      if (j < 0 || j >= mat[i].length) continue;
-      if (mat[i][j].isMine) neighborsCount++;
+      if (j < 0 || j >= board[i].length) continue;
+      if (board[i][j].isMine) neighborsCount++;
     }
   }
   return neighborsCount;
@@ -93,7 +93,7 @@ function copyMat(mat) {
 }
 
 function addGameStep() {
-  var board = copyMat(gBoardMatrix);
+  var board = copyMat(gBoard);
   var step = {
     board,
     shownCount: gGame.shownCount,
