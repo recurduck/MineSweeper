@@ -36,11 +36,6 @@ var gGame = {
 // Dark mode variable
 var gDarkModeIsOn = false
 
-// todo:
-/*
-none
-*/
-
 var gBoard; //[{ minesAroundCount: 4, isShown: true,isMine: false, isMarked: true}];
 var gBestScore;
 
@@ -462,6 +457,7 @@ function openCustomMenu() {
     var elCustom = document.querySelector('.custom')
     elCustom.style.display = 'block';
 }
+
 // Hide Custom menu
 function closeCustomMenu() {
     var elCustom = document.querySelector('.custom')
